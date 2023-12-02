@@ -7,6 +7,19 @@
 
 void simulation() {
     Packets CentralStation;
+    Packets VIPStation;
+    // Create hubs
+    Hubs hubsVIP;
+    Van vanVIPADT1("VIPADT1");
+    Van vanVIPPER1("VIPPER1");
+    Van vanVIPROD1("VIPROD1");
+    Van vanVIPVDT1("VIPVDT1");
+    Van vanVIPCDV1("VIPCDV1");
+    Van vanVIPMOZ1("VIPMOZ1");
+    Van vanVIPCDB1("VIPCBD1");
+    Van vanVIPALD1("VIPALD1");
+    Van vanVIPSAL1("VIPSAL1");
+    
     
 
     // Generate x number of packets
@@ -274,9 +287,84 @@ void simulation() {
                     std::cout << "--------------------------------------------------" << std::endl;
                     break;
                     }
-            case 5:
-                // Implement processing packets in hubs
-                break;
+            case 5: 
+                {
+                    // Generate x number of packets
+                    int x;
+                    std::cout << "Enter the packet number to move packet from SPCS to PC: ";
+                    std::cin >> x;
+                    std::cout << "--------------------------------------------------" << std::endl;
+                    CentralStation.displayPacketByNumber(x);
+                    std::cout << "The packet is moving to VIP Station." << std::endl;
+                    CentralStation.movePacketToVIPList(x, VIPStation);
+                    std::cout << "Transfer successful!" << std::endl;
+                    CentralStation.displayPacketByNumber(x);
+                    std::cout << "Transfer complete" << std::endl;
+
+                    // Iterate through all packets until all vans have at least one packet
+                    Packets::Node* currentPacket = VIPStation.peekFront();
+                    while (currentPacket) {  
+
+                        int y;
+                        std::cout << "Enter the PC number to move packet to: ";
+                        std::cin >> y;
+                        hubsVIP.addPC(37115, "ADT");
+                        hubsVIP.addPC(37427, "PER");
+                        hubsVIP.addPC(37449, "ROD");
+                        hubsVIP.addPC(37893, "VDT");
+                        hubsVIP.addPC(37797, "CDV");
+                        hubsVIP.addPC(37796, "MOZ");
+                        hubsVIP.addPC(37129, "CDB");
+                        hubsVIP.addPC(37340, "ALD");
+                        hubsVIP.addPC(37002, "SAL");
+                        Hubs::PC* hub = hubsVIP.searchPC(y);
+
+                        if (hub) {
+                            // Find the corresponding van
+                            Van* correspondingVan = nullptr;
+
+                            switch (y) {
+                                case 37115: correspondingVan = &vanVIPADT1; break;
+                                case 37427: correspondingVan = &vanVIPPER1; break;
+                                case 37449: correspondingVan = &vanVIPROD1; break;
+                                case 37893: correspondingVan = &vanVIPVDT1; break;
+                                case 37797: correspondingVan = &vanVIPCDV1; break;
+                                case 37796: correspondingVan = &vanVIPMOZ1; break;
+                                case 37129: correspondingVan = &vanVIPCDB1; break;
+                                case 37340: correspondingVan = &vanVIPALD1; break;
+                                case 37002: correspondingVan = &vanVIPSAL1; break;
+                            }
+
+                            // Load the packet into the corresponding van
+                            if (correspondingVan) {
+                                correspondingVan->loadPacket(currentPacket);
+                
+                                std::cout << "Packet loaded into the corresponding van: " << correspondingVan->getAcronym() << "\n";
+                                Van::Node* vanTop = correspondingVan->getTop();
+                                while (vanTop) {
+                                    std::cout << "Packet Number: " << vanTop->data->id.packetNumber << "\n";
+                                    std::cout << "Packet ID: " << vanTop->data->id.packetNumber << "-" << vanTop->data->id.randomDigits << vanTop->data->id.randomLetter << "-" << vanTop->data->id.classificationDate << "-" << vanTop->data->id.townCodes << "\n";
+                                    std::cout << "Longitude: " << vanTop->data->longitude.degrees << "º " << vanTop->data->longitude.minutes << "' " << vanTop->data->longitude.seconds << "\"\n";
+                                    std::cout << "Latitude: " << vanTop->data->latitude.degrees << "º " << vanTop->data->latitude.minutes << "' " << vanTop->data->latitude.seconds << "\"\n";
+                                    std::cout << "Client ID: " << vanTop->data->clientID << "\n\n";
+                                    vanTop = vanTop->next; 
+                                }
+                                std::cout << "--------------------------------------------------" << std::endl;
+                            }
+                            else {
+                                std::cout << "Corresponding van not found.\n";
+                            }
+                        }
+                        else {
+                            std::cout << "Postal Code not found.\n";
+                        }
+
+                        // Move to the next packet
+                        currentPacket = currentPacket->next;
+                    }
+                    break;
+                }
+
             case 6:
                 // Implement displaying hubs information
                 break;
