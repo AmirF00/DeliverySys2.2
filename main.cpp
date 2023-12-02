@@ -3,6 +3,7 @@
 #include "van.hpp"
 #include "packets.hpp"
 #include "hubs.hpp"
+#include "simulation.hpp"
 #include <iostream>
 
 int main() {
@@ -105,6 +106,8 @@ int main() {
     std::cout << "VIP Packets in the VIP Van:\n";
     van.displayPackets();  // Display VIP packets using the corrected function
     std::cout << "\n\n";
+    
+    simulation();
 
     return 0;
 }
