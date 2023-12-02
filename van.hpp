@@ -7,15 +7,26 @@
 
 class Van {
 public:
+
+    // Constructor with acronym
+    Van(const std::string& vanAcronym);
     struct Node {
         Packets::Node* data;
         Node* next;
     };
     Node* top; // For regular packets
     Node* vipTop; // For VIP packets
+    std::string getAcronym() const;
+    // Function to get the number of packets in the van
+    int getNumPackets() const;
+    
+    
+
 
 private:
     static const int MAX_CAPACITY = 86;
+    std::string acronym;
+    
 
 public:
     Van();  // Constructor
@@ -24,9 +35,8 @@ public:
     void loadPacket(Packets::Node* packet);
     void unloadPackets();
     void loadPacketVIP(Packets::Node* packet);
-    void unloadVIP();
     void displayPackets() const;
-
+    void unloadVIP();
     bool isFullyLoaded() const;
     bool isVIPFullyLoaded() const;
     bool isEmpty() const;

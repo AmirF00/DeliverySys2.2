@@ -3,8 +3,9 @@
 #include "van.hpp"
 #include <iostream>
 
-Van::Van() : top(nullptr), vipTop(nullptr) {
-    // Constructor
+// Constructor
+Van::Van(const std::string& vanAcronym) : top(nullptr), vipTop(nullptr), acronym(vanAcronym) {
+    // Other constructor initialization, if any
 }
 
 Van::~Van() {
@@ -45,14 +46,18 @@ void Van::loadPacketVIP(Packets::Node* packet) {
 }
 
 void Van::unloadVIP() {
-    std::cout << "Unloading VIP packets: ";
-    while (vipTop) {
-        Node* temp = vipTop;
-        std::cout << temp->data->id.packetNumber << " ";
-        vipTop = temp->next;
-        delete temp;
+    if (vipTop) {
+        std::cout << "Unloading VIP packets: ";
+        while (vipTop) {
+            Node* temp = vipTop;
+            std::cout << temp->data->id.packetNumber << " ";
+            vipTop = temp->next;
+            delete temp;
+        }
+        std::cout << std::endl;
+    } else {
+        std::cout << "No VIP packets to unload." << std::endl;
     }
-    std::cout << std::endl;
 }
 
 bool Van::isFullyLoaded() const {
@@ -121,3 +126,18 @@ void Van::displayPackets() const {
     }
 }
 
+// Implement the getAcronym function
+std::string Van::getAcronym() const {
+    return acronym;
+}
+
+// Function to get the number of packets in the van
+int Van::getNumPackets() const {
+    int count = 0;
+    Van::Node* current = top;  // Assuming 'top' is the head of your linked list
+    while (current) {
+        count++;
+        current = current->next;
+    }
+    return count;
+}
