@@ -23,7 +23,27 @@ int main() {
         // Display the postal codes in the AVL tree
     std::cout << "Postal Codes in AVL Tree:" << std::endl;
     hubs.displayPCs();
+    std::cout << "-------------------------------------" << std::endl;
+    // Create a packet
+    Packets packets;
+    packets.addPacket();  // You can add more packets if needed
+    // Traverse the tree to find the hub based on the town code in the packet ID
+    Packets::Node* frontPacket = packets.peekFront();
+    if (frontPacket) {
+        int packetPostalCode = std::stoi(frontPacket->id.townCodes);
+        Hubs::PC* hub = hubs.searchPC(packetPostalCode);
 
+        if (hub) {
+            std::cout << "Packet ID: " << frontPacket->id.packetNumber << "\n";
+            std::cout << "Packet's Town Code: " << frontPacket->id.townCodes << "\n";
+            std::cout << "Corresponding Hub Acronym: " << hub->acronym << "\n";
+        } else {
+            std::cout << "No hub found for the packet's town code.\n";
+        }
+    } else {
+        std::cout << "No packets in the list.\n";
+    }
+    std::cout << "-------------------------------------" << std::endl;
     // Display hubs
     std::cout << "Hubs Information:\n";
     hubs.displayPCs();
@@ -31,7 +51,7 @@ int main() {
 
     // Create a van and packets
     Van van;
-    Packets packets;
+    
     Packets packetsVIP;
 
     // Load regular packets into the van
