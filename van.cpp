@@ -141,3 +141,68 @@ int Van::getNumPackets() const {
     }
     return count;
 }
+
+// Function to move a packet from the current van to another van
+void Van::movePacket(Van& vanDestination, int movedPacketNumber) {
+    // Iterate through all packets in the current van
+    Node* current = top;
+    Node* prev = nullptr;  // Keep track of the previous node for unlinking
+
+    while (current) {
+        // Check if the packet number matches the one to be moved
+        if (current->data->id.packetNumber == movedPacketNumber) {
+            // Unlink the current node from the current van
+            if (prev) {
+                prev->next = current->next;
+            } else {
+                top = current->next;
+            }
+
+            // Load the packet into the destination van
+            vanDestination.loadPacket(current->data);
+            
+            std::cout << "Packet with number " << movedPacketNumber << " moved from " << getAcronym() 
+                      << " to " << vanDestination.getAcronym() << "\n";
+            
+            // Delete the node, but not the packet itself
+            delete current;
+
+            // Exit the loop after moving the packet
+            break;
+        }
+
+        // Move to the next packet in the current van
+        prev = current;
+        current = current->next;
+    }
+}
+
+// Function to unload a packet with a specific packet number from the van
+void Van::unloadPacket(int packetNumber) {
+    Node* current = top;
+    Node* prev = nullptr;  // Keep track of the previous node for unlinking
+
+    while (current) {
+        if (current->data->id.packetNumber == packetNumber) {
+            // Unlink the current node from the van
+            if (prev) {
+                prev->next = current->next;
+            } else {
+                top = current->next;
+            }
+
+            // Delete the node, but not the packet itself
+            delete current;
+            std::cout << "Packet with number " << packetNumber << " unloaded from " << getAcronym() << "\n";
+            return;
+        }
+
+        // Move to the next packet in the van
+        prev = current;
+        current = current->next;
+    }
+
+    // If the function reaches here, the packet was not found in the van
+    std::cout << "Packet with number " << packetNumber << " not found in " << getAcronym() << "\n";
+}
+

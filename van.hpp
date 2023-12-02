@@ -41,7 +41,10 @@ public:
     bool isVIPFullyLoaded() const;
     bool isEmpty() const;
     bool isVIPEmpty() const;
-
+    // Function to unload a packet with a specific packet number from the van
+    void unloadPacket(int packetNumber);
+    // Function to move a packet from the current van to another van
+    void movePacket(Van& vanDestination, int movedPacketNumber);
     // Getters and setters
     //Node* getTop() const;
     void setTop(Node* newTop);

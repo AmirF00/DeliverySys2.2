@@ -21,6 +21,31 @@ void simulation() {
     Van vanVIPSAL1("VIPSAL1");
     
     
+     // Create hubs
+    Hubs hubsGlobal;
+
+    // Add postal codes and acronyms to hubs
+    hubsGlobal.addPC(37115, "ADT");
+    hubsGlobal.addPC(37427, "PER");
+    hubsGlobal.addPC(37449, "ROD");
+    hubsGlobal.addPC(37893, "VDT");
+    hubsGlobal.addPC(37797, "CDV");
+    hubsGlobal.addPC(37796, "MOZ");
+    hubsGlobal.addPC(37129, "CDB");
+    hubsGlobal.addPC(37340, "ALD");
+    hubsGlobal.addPC(37002, "SAL");
+
+    Van vanGlobalADT1("GlobalADT1");
+    Van vanGlobalPER1("GlobalPER1");
+    Van vanGlobalROD1("GlobalROD1");
+    Van vanGlobalVDT1("GlobalVDT1");
+    Van vanGlobalCDV1("GlobalCDV1");
+    Van vanGlobalMOZ1("GlobalMOZ1");
+    Van vanGlobalCDB1("GlobalCBD1");
+    Van vanGlobalALD1("GlobalALD1");
+    Van vanGlobalSAL1("GlobalSAL1");
+    
+    
 
     // Generate x number of packets
     int x;
@@ -42,6 +67,7 @@ void simulation() {
         std::cout << "5. Transport (move) a manually selected (existing) packet from the SPCS to a given PC\n";
         std::cout << "6. Transport (move) a manually selected (existing) packet from a given PC to another given PC.\n";
         std::cout << "7. Carry on with the packet’s delivery\n";
+        std::cout << "8. Carry on with the packet’s delivery FAST\n";
         std::cout << "0. Exit\n";
         std::cout << "Enter your choice (1-7): ";
         
@@ -366,9 +392,339 @@ void simulation() {
                 }
 
             case 6:
-                // Implement displaying hubs information
-                break;
+               {
+                    // Create hubs
+                    Hubs hubs;
+
+                    // Add postal codes and acronyms to hubs
+                    hubs.addPC(37115, "ADT");
+                    hubs.addPC(37427, "PER");
+                    hubs.addPC(37449, "ROD");
+                    hubs.addPC(37893, "VDT");
+                    hubs.addPC(37797, "CDV");
+                    hubs.addPC(37796, "MOZ");
+                    hubs.addPC(37129, "CDB");
+                    hubs.addPC(37340, "ALD");
+                    hubs.addPC(37002, "SAL");
+
+                    Van vanADT1("ADT1");
+                    Van vanPER1("PER1");
+                    Van vanROD1("ROD1");
+                    Van vanVDT1("VDT1");
+                    Van vanCDV1("CDV1");
+                    Van vanMOZ1("MOZ1");
+                    Van vanCDB1("CBD1");
+                    Van vanALD1("ALD1");
+                    Van vanSAL1("SAL1");
+
+                    // Keep track of loaded vans
+                    std::set<Van*> loadedVans;
+                    int numPacketsADT1 = vanADT1.getNumPackets();
+                    int numPacketsPER1 = vanPER1.getNumPackets();
+                    int numPacketsROD1 = vanROD1.getNumPackets();
+                    int numPacketsVDT1 = vanVDT1.getNumPackets();
+                    int numPacketsCDV1 = vanCDV1.getNumPackets();
+                    int numPacketsMOZ1 = vanMOZ1.getNumPackets();
+                    int numPacketsCDB1 = vanCDB1.getNumPackets();
+                    int numPacketsALD1 = vanALD1.getNumPackets();
+                    int numPacketsSAL1 = vanSAL1.getNumPackets();
+                    std::cout << "Number of packets in the van: " << numPacketsADT1 << std::endl;
+                    std::cout << "Number of packets in the van: " << numPacketsPER1 << std::endl;
+                    std::cout << "Number of packets in the van: " << numPacketsROD1 << std::endl;
+                    std::cout << "Number of packets in the van: " << numPacketsVDT1 << std::endl;
+                    std::cout << "Number of packets in the van: " << numPacketsCDV1 << std::endl;
+                    std::cout << "Number of packets in the van: " << numPacketsMOZ1 << std::endl;
+                    std::cout << "Number of packets in the van: " << numPacketsCDB1 << std::endl;
+                    std::cout << "Number of packets in the van: " << numPacketsALD1 << std::endl;
+                    std::cout << "Number of packets in the van: " << numPacketsSAL1 << std::endl;
+                    // Iterate through all packets until all vans have at least one packet
+                    Packets::Node* currentPacket = CentralStation.peekFront();
+                    int packetsToProcess;
+                    std::cout << "Enter the number of packets to process: ";
+                    std::cin >> packetsToProcess;
+                    while (currentPacket && packetsToProcess>0) {  // Removed the condition !loadedVans.empty()
+
+                        int packetPostalCode = std::stoi(currentPacket->id.townCodes);
+                        Hubs::PC* hub = hubs.searchPC(packetPostalCode);
+
+                        if (hub) {
+                            // Find the corresponding van
+                            Van* correspondingVan = nullptr;
+                            switch (packetPostalCode) {
+                                case 37115: correspondingVan = &vanADT1; break;
+                                case 37427: correspondingVan = &vanPER1; break;
+                                case 37449: correspondingVan = &vanROD1; break;
+                                case 37893: correspondingVan = &vanVDT1; break;
+                                case 37797: correspondingVan = &vanCDV1; break;
+                                case 37796: correspondingVan = &vanMOZ1; break;
+                                case 37129: correspondingVan = &vanCDB1; break;
+                                case 37340: correspondingVan = &vanALD1; break;
+                                case 37002: correspondingVan = &vanSAL1; break;
+                            }
+
+                            // Load the packet into the corresponding van
+                            if (correspondingVan) {
+                                correspondingVan->loadPacket(currentPacket);
+                                loadedVans.insert(correspondingVan);
+                                std::cout << "Packet loaded into the corresponding van: " << correspondingVan->getAcronym() << "\n";
+                                // Update the number of packets for each van after loading a packet
+                                numPacketsADT1 = vanADT1.getNumPackets();
+                                numPacketsPER1 = vanPER1.getNumPackets();
+                                numPacketsROD1 = vanROD1.getNumPackets();
+                                numPacketsVDT1 = vanVDT1.getNumPackets();
+                                numPacketsCDV1 = vanCDV1.getNumPackets();
+                                numPacketsMOZ1 = vanMOZ1.getNumPackets();
+                                numPacketsCDB1 = vanCDB1.getNumPackets();
+                                numPacketsALD1 = vanALD1.getNumPackets();
+                                numPacketsSAL1 = vanSAL1.getNumPackets();
+
+                                // Display the number of packets for each van
+                                std::cout << "Number of packets in the van ADT1: " << numPacketsADT1 << std::endl;
+                                std::cout << "Number of packets in the van PER1: " << numPacketsPER1 << std::endl;
+                                std::cout << "Number of packets in the van ROD1: " << numPacketsROD1 << std::endl;
+                                std::cout << "Number of packets in the van VDT1: " << numPacketsVDT1 << std::endl;
+                                std::cout << "Number of packets in the van CDV1: " << numPacketsCDV1 << std::endl;
+                                std::cout << "Number of packets in the van MOZ1: " << numPacketsMOZ1 << std::endl;
+                                std::cout << "Number of packets in the van CDB1: " << numPacketsCDB1 << std::endl;
+                                std::cout << "Number of packets in the van ALD1: " << numPacketsALD1 << std::endl;
+                                std::cout << "Number of packets in the van SAL1: " << numPacketsSAL1 << std::endl;
+                                
+
+                            }
+                            
+                            
+                        }
+
+                        // Move to the next packet
+                        currentPacket = currentPacket->next;
+                        --packetsToProcess;
+                        
+                    }
+
+                    
+                    
+                    
+                    
+                    // Display the first packet of each loaded van
+                    std::cout << "All packets in each loaded van:\n";
+                    for (Van* loadedVan : loadedVans) {
+                        //std::cout << "Van: " << loadedVan->getTop()->data->id.packetNumber << "\n";
+
+                        // Display the first packet in the stack of each loaded van
+                        std::cout << "All the packets in the van's stack: " << loadedVan->getAcronym() << "\n"; 
+                        Van::Node* vanTop = loadedVan->getTop();
+                        while (vanTop) {
+                            std::cout << "Packet Number: " << vanTop->data->id.packetNumber << "\n" 
+                                    << "Packet ID: " << vanTop->data->id.packetNumber << "-" 
+                                    << vanTop->data->id.randomDigits << vanTop->data->id.randomLetter << "-" 
+                                    << vanTop->data->id.classificationDate << "-" << vanTop->data->id.townCodes << "\n" 
+                                    << "Longitude: " << vanTop->data->longitude.degrees << "º " << vanTop->data->longitude.minutes << "' " 
+                                    << vanTop->data->longitude.seconds << "\"\n" 
+                                    << "Latitude: " << vanTop->data->latitude.degrees << "º " << vanTop->data->latitude.minutes << "' " 
+                                    << vanTop->data->latitude.seconds << "\"\n"
+                                    << "Client ID: " << vanTop->data->clientID << "\n\n";
+                            vanTop = vanTop->next; 
+                        }
+                        
+                        std::cout << "---------------------------------------------------------------------------------------\n";
+                    }
+                    int moveFrom;
+                        std::cout << "Which PCs to move packet from:  \n";
+                        std::cout << "1. ADT\n";
+                        std::cout << "2. PER\n";
+                        std::cout << "3. ROD\n";
+                        std::cout << "4. VDT\n";
+                        std::cout << "5. CDV\n";
+                        std::cout << "6. MOZ\n";
+                        std::cout << "7. CDB\n";
+                        std::cout << "8. ALD\n";
+                        std::cout << "9. SAL\n";
+                      
+                        std::cin >> moveFrom;
+                        int packNum;
+                        std::cout << "Packet Number of moving packet:   ";
+                        std::cin >> packNum;
+                        int moveTo;
+                        std::cout << "Which PCs to move packet to:  ";
+                        std::cout << "1. ADT\n";
+                        std::cout << "2. PER\n";
+                        std::cout << "3. ROD\n";
+                        std::cout << "4. VDT\n";
+                        std::cout << "5. CDV\n";
+                        std::cout << "6. MOZ\n";
+                        std::cout << "7. CDB\n";
+                        std::cout << "8. ALD\n";
+                        std::cout << "9. SAL\n";
+                        std::cin >> moveTo;
+                        switch (moveFrom) {
+                            case 1: 
+                                {
+                                    switch(moveTo) {
+                                            case 2: vanADT1.movePacket(vanPER1, packNum); break;
+                                            case 3: vanADT1.movePacket(vanROD1, packNum); break;
+                                            case 4: vanADT1.movePacket(vanVDT1, packNum); break;
+                                            case 5: vanADT1.movePacket(vanCDV1, packNum); break;
+                                            case 6: vanADT1.movePacket(vanMOZ1, packNum); break;
+                                            case 7: vanADT1.movePacket(vanCDB1, packNum); break;
+                                            case 8: vanADT1.movePacket(vanALD1, packNum); break;
+                                            case 9: vanADT1.movePacket(vanSAL1, packNum); break;
+                                        }
+                                        break;
+                                    }
+                            case 2:
+                                 {
+                                    switch(moveTo) {
+                                            case 1: vanPER1.movePacket(vanADT1, packNum); break;
+                                            case 3: vanPER1.movePacket(vanROD1, packNum); break;
+                                            case 4: vanPER1.movePacket(vanVDT1, packNum); break;
+                                            case 5: vanPER1.movePacket(vanCDV1, packNum); break;
+                                            case 6: vanPER1.movePacket(vanMOZ1, packNum); break;
+                                            case 7: vanPER1.movePacket(vanCDB1, packNum); break;
+                                            case 8: vanPER1.movePacket(vanALD1, packNum); break;
+                                            case 9: vanPER1.movePacket(vanSAL1, packNum); break;
+                                        }
+                                        break;
+                                    }
+                            case 3:
+                                 {
+                                    switch(moveTo) {
+                                            
+                                            case 1: vanROD1.movePacket(vanADT1, packNum); break;
+                                            case 2: vanROD1.movePacket(vanPER1, packNum); break;
+                                            case 4: vanROD1.movePacket(vanVDT1, packNum); break;
+                                            case 5: vanROD1.movePacket(vanCDV1, packNum); break;
+                                            case 6: vanROD1.movePacket(vanMOZ1, packNum); break;
+                                            case 7: vanROD1.movePacket(vanCDB1, packNum); break;
+                                            case 8: vanROD1.movePacket(vanALD1, packNum); break;
+                                            case 9: vanROD1.movePacket(vanSAL1, packNum); break;
+                                        }
+                                        break;
+                                    }
+                            case 4:
+                                 {
+                                    switch(moveTo) {
+                                            case 1: vanVDT1.movePacket(vanADT1, packNum); break;
+                                            case 2: vanVDT1.movePacket(vanPER1, packNum); break;
+                                            case 3: vanVDT1.movePacket(vanROD1, packNum); break;
+                                            
+                                            case 5: vanVDT1.movePacket(vanCDV1, packNum); break;
+                                            case 6: vanVDT1.movePacket(vanMOZ1, packNum); break;
+                                            case 7: vanVDT1.movePacket(vanCDB1, packNum); break;
+                                            case 8: vanVDT1.movePacket(vanALD1, packNum); break;
+                                            case 9: vanVDT1.movePacket(vanSAL1, packNum); break;
+                                        }
+                                        break;
+                                    }
+                            case 5: 
+                                 {
+                                    switch(moveTo) {
+                                            case 1: vanCDV1.movePacket(vanADT1, packNum); break;
+                                            case 2: vanCDV1.movePacket(vanPER1, packNum); break;
+                                            case 3: vanCDV1.movePacket(vanROD1, packNum); break;
+                                            case 4: vanCDV1.movePacket(vanVDT1, packNum); break;
+                                            
+                                            case 6: vanCDV1.movePacket(vanMOZ1, packNum); break;
+                                            case 7: vanCDV1.movePacket(vanCDB1, packNum); break;
+                                            case 8: vanCDV1.movePacket(vanALD1, packNum); break;
+                                            case 9: vanCDV1.movePacket(vanSAL1, packNum); break;
+                                        }
+                                        break;
+                                    }
+                            case 6:
+                                 {
+                                    switch(moveTo) {
+                                            case 1: vanMOZ1.movePacket(vanADT1, packNum); break;
+                                            case 2: vanMOZ1.movePacket(vanPER1, packNum); break;
+                                            case 3: vanMOZ1.movePacket(vanROD1, packNum); break;
+                                            case 4: vanMOZ1.movePacket(vanVDT1, packNum); break;
+                                            case 5: vanMOZ1.movePacket(vanCDV1, packNum); break;
+                                            
+                                            case 7: vanMOZ1.movePacket(vanCDB1, packNum); break;
+                                            case 8: vanMOZ1.movePacket(vanALD1, packNum); break;
+                                            case 9: vanMOZ1.movePacket(vanSAL1, packNum); break;
+                                        }
+                                        break;
+                                    }
+                            case 7:
+                                 {
+                                    switch(moveTo) {
+                                            case 1: vanCDB1.movePacket(vanADT1, packNum); break;
+                                            case 2: vanCDB1.movePacket(vanPER1, packNum); break;
+                                            case 3: vanCDB1.movePacket(vanROD1, packNum); break;
+                                            case 4: vanCDB1.movePacket(vanVDT1, packNum); break;
+                                            case 5: vanCDB1.movePacket(vanCDV1, packNum); break;
+                                            case 6: vanCDB1.movePacket(vanMOZ1, packNum); break;
+                                            
+                                            case 8: vanCDB1.movePacket(vanALD1, packNum); break;
+                                            case 9: vanCDB1.movePacket(vanSAL1, packNum); break;
+                                        }
+                                        break;
+                                    }
+                            case 8:
+                                 {
+                                    switch(moveTo) {
+                                            case 1: vanALD1.movePacket(vanADT1, packNum); break;
+                                            case 2: vanALD1.movePacket(vanPER1, packNum); break;
+                                            case 3: vanALD1.movePacket(vanROD1, packNum); break;
+                                            case 4: vanALD1.movePacket(vanVDT1, packNum); break;
+                                            case 5: vanALD1.movePacket(vanCDV1, packNum); break;
+                                            case 6: vanALD1.movePacket(vanMOZ1, packNum); break;
+                                            case 7: vanALD1.movePacket(vanCDB1, packNum); break;
+                                            
+                                            case 9: vanALD1.movePacket(vanSAL1, packNum); break;
+                                        }
+                                        break;
+                                    }
+                            case 9: 
+                                 {
+                                    switch(moveTo) {
+                                            case 1: vanSAL1.movePacket(vanSAL1, packNum); break;
+                                            case 2: vanSAL1.movePacket(vanPER1, packNum); break;
+                                            case 3: vanSAL1.movePacket(vanROD1, packNum); break;
+                                            case 4: vanSAL1.movePacket(vanVDT1, packNum); break;
+                                            case 5: vanSAL1.movePacket(vanCDV1, packNum); break;
+                                            case 6: vanSAL1.movePacket(vanMOZ1, packNum); break;
+                                            case 7: vanSAL1.movePacket(vanCDB1, packNum); break;
+                                            case 8: vanSAL1.movePacket(vanALD1, packNum); break;
+                                            
+                                        }
+                                        break;
+                                    }
+                            default:
+                                std::cout << "Invalid choice. Please enter a number between 1 and 7.\n";
+                                break;
+                            
+                            }
+                            // Display the first packet of each loaded van
+                            std::cout << "All packets in each loaded van:\n";
+                            for (Van* loadedVan : loadedVans) {
+                                //std::cout << "Van: " << loadedVan->getTop()->data->id.packetNumber << "\n";
+
+                                // Display the first packet in the stack of each loaded van
+                                std::cout << "All the packets in the van's stack: " << loadedVan->getAcronym() << "\n"; 
+                                Van::Node* vanTop = loadedVan->getTop();
+                                while (vanTop) {
+                                    std::cout << "Packet Number: " << vanTop->data->id.packetNumber << "\n" 
+                                            << "Packet ID: " << vanTop->data->id.packetNumber << "-" 
+                                            << vanTop->data->id.randomDigits << vanTop->data->id.randomLetter << "-" 
+                                            << vanTop->data->id.classificationDate << "-" << vanTop->data->id.townCodes << "\n" 
+                                            << "Longitude: " << vanTop->data->longitude.degrees << "º " << vanTop->data->longitude.minutes << "' " 
+                                            << vanTop->data->longitude.seconds << "\"\n" 
+                                            << "Latitude: " << vanTop->data->latitude.degrees << "º " << vanTop->data->latitude.minutes << "' " 
+                                            << vanTop->data->latitude.seconds << "\"\n"
+                                            << "Client ID: " << vanTop->data->clientID << "\n\n";
+                                    vanTop = vanTop->next; 
+                                }
+                        
+                            std::cout << "---------------------------------------------------------------------------------------\n";
+                            }
+
+                    break;
+                }
             case 7:
+                // implement
+                break;
+            case 8:
                 // implement
                 break;
             default:
