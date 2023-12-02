@@ -27,7 +27,7 @@ void Packets::addPacket() {
 
     // Set packet ID
     newNode->id.packetNumber = packetCount;
-    newNode->id.randomDigits = std::to_string(std::rand() % 1000);
+    newNode->id.randomDigits = std::to_string(100 + std::rand() % 900);
     newNode->id.randomLetter = 'A' + std::rand() % 26;
     newNode->id.classificationDate = generateRandomDate();
     newNode->id.townCodes = getRandomTownCode();
@@ -65,8 +65,9 @@ void Packets::displayPackets() {
     Node* current = head;
     while (current != nullptr) {
         std::cout << "Packet Number: " << current->id.packetNumber << "\n";
-        std::cout << "Packet ID: " << current->id.packetNumber << "-" << current->id.randomDigits
-                  << "-" << current->id.randomLetter << "-" << current->id.classificationDate
+        std::cout << "Packet ID: " << current->id.packetNumber << "-"
+                  << current->id.randomDigits << current->id.randomLetter
+                  << "-" << current->id.classificationDate
                   << "-" << current->id.townCodes << "\n";
         std::cout << "Longitude: " << current->longitude.degrees << "º "
                   << current->longitude.minutes << "' " << current->longitude.seconds << "\"\n";
@@ -226,14 +227,19 @@ std::string Packets::generateRandomDate() {
     int month = 1 + std::rand() % 12;
     int year = 2020 + std::rand() % 3; // Random year between 2020 and 2022
 
-    return std::to_string(day) + "-" + std::to_string(month) + "-" + std::to_string(year);
+    return std::to_string(day) +  std::to_string(month) + std::to_string(year);
 }
 
 // Helper function to select a town code at random
+// Helper function to select a town code at random
 std::string Packets::getRandomTownCode() {
     const std::string townCodes[] = {"ADT", "PER", "ROD", "VDT", "CDV", "MOZ", "CDB", "ALD", "SAL"};
-    return townCodes[std::rand() % 9];
+    const std::string postalCodes[] = {"37115", "37427", "37449", "37893", "37797", "37796", "37129", "37340", "37002"};
+
+    int index = std::rand() % 9;
+    return postalCodes[index];
 }
+
 
 void Packets::movePacketToVIPList(int packetNumber, Packets& packetVIP) {
     Node* current = head;
@@ -288,4 +294,30 @@ void Packets::movePacketToVIPList(int packetNumber, Packets& packetVIP) {
 
         current = current->next;
     }
+}
+
+// Function to display a specific packet by packet number
+void Packets::displayPacketByNumber(int packetNumber) {
+    Node* current = head;
+    
+    while (current != nullptr) {
+        if (current->id.packetNumber == packetNumber) {
+            std::cout << "Packet Number: " << current->id.packetNumber << "\n";
+            std::cout << "Packet ID: " << current->id.packetNumber << "-"
+                      << current->id.randomDigits << current->id.randomLetter
+                      << "-" << current->id.classificationDate
+                      << "-" << current->id.townCodes << "\n";
+            std::cout << "Longitude: " << current->longitude.degrees << "º "
+                      << current->longitude.minutes << "' " << current->longitude.seconds << "\"\n";
+            std::cout << "Latitude: " << current->latitude.degrees << "º "
+                      << current->latitude.minutes << "' " << current->latitude.seconds << "\"\n";
+            std::cout << "Client ID: " << current->clientID << "\n\n";
+            return; // Exit the loop once the packet is found
+        }
+
+        current = current->next;
+    }
+
+    // If the packet with the given number is not found
+    std::cout << "Packet with number " << packetNumber << " not found.\n";
 }

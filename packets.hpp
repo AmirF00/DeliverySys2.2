@@ -76,6 +76,8 @@ public:
     void setTail(Node* newTail);
     void setPacketCount(int newPacketCount);
     void movePacketToVIPList(int packetNumber, Packets& packetVIP);
+    // Function to display a specific packet by packet number
+    void displayPacketByNumber(int packetNumber);
 
 private:
     // Helper function to generate a random date after 2020

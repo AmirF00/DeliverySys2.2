@@ -34,7 +34,7 @@ int main() {
     for (int i = 1; i <= 10; ++i) {
         packets.addPacket();
         Packets::Node* packet = packets.peekEnd();
-        packets.displayPackets();
+        packets.displayPacketByNumber(i);
         van.loadPacket(packet);
     }
 
