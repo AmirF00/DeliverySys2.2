@@ -19,6 +19,10 @@ int main() {
     hubs.addPC(37129, "CDB");
     hubs.addPC(37340, "ALD");
     hubs.addPC(3003, "SAL");
+    
+        // Display the postal codes in the AVL tree
+    std::cout << "Postal Codes in AVL Tree:" << std::endl;
+    hubs.displayPCs();
 
     // Display hubs
     std::cout << "Hubs Information:\n";
