@@ -23,12 +23,13 @@ void simulation() {
         // Display menu
         std::cout << "\nMenu:\n";
         std::cout << "1. Show the data corresponding to the next parcels ready to be delivered to any selected PC\n";
-        std::cout << "2. Load a Packet into a Van\n";
-        std::cout << "3. Unload Packets from a Van\n";
-        std::cout << "4. Display All Vans\n";
-        std::cout << "5. Process Packets in Hubs\n";
-        std::cout << "6. Display Hubs Information\n";
-        std::cout << "7. Exit\n";
+        std::cout << "2. Show the descriptive statistics (absolute and relative frequencies, total amount of parcels per PC, PC with the largest or smallest number of packets, etc.) of all the PCs. For that, the algorithm must walk the tree nodes in Post-Order fashion\n";
+        std::cout << "3. Search a given packet using its ID.\n";
+        std::cout << "4. Delete (from the system) a given packet from a given PC\n";
+        std::cout << "5. Transport (move) a manually selected (existing) packet from the SPCS to a given PC\n";
+        std::cout << "6. Transport (move) a manually selected (existing) packet from a given PC to another given PC.\n";
+        std::cout << "7. Carry on with the packet’s delivery\n";
+        std::cout << "0. Exit\n";
         std::cout << "Enter your choice (1-7): ";
         
         // Handle non-integer input
@@ -39,6 +40,11 @@ void simulation() {
         }
 
         switch (choice) {
+            case 0:
+                {
+                    std::cout << "Exiting the simulation.\n";
+                    break;
+                }
             case 1:
                 {
                     // Create hubs
@@ -242,11 +248,32 @@ void simulation() {
                     break;
                 }
             case 3:
-                // Implement unloading packets from a van
-                break;
+                {
+                    // Generate x number of packets
+                    int x;
+                    std::cout << "Enter the packet number to show you your packet data: ";
+                    std::cin >> x;
+                    std::cout << "--------------------------------------------------" << std::endl;
+                    CentralStation.displayPacketByNumber(x);
+                    std::cout << "--------------------------------------------------" << std::endl;
+                    break;
+                    }
             case 4:
-                // Implement displaying all vans
-                break;
+                {
+                    // Generate x number of packets
+                    int x;
+                    std::cout << "Enter the packet number to delete packet: ";
+                    std::cin >> x;
+                    std::cout << "--------------------------------------------------" << std::endl;
+                    CentralStation.displayPacketByNumber(x);
+                    std::cout << "Deleting the packet" << std::endl;
+                    CentralStation.deletePacketAtPosition(x);
+                    std::cout << "Packet successfully deleted as try to show packet again below" << std::endl;
+                    CentralStation.displayPacketByNumber(x);
+                    std::cout << "deletion complete" << std::endl;
+                    std::cout << "--------------------------------------------------" << std::endl;
+                    break;
+                    }
             case 5:
                 // Implement processing packets in hubs
                 break;
@@ -254,11 +281,11 @@ void simulation() {
                 // Implement displaying hubs information
                 break;
             case 7:
-                std::cout << "Exiting the simulation.\n";
+                // implement
                 break;
             default:
                 std::cout << "Invalid choice. Please enter a number between 1 and 7.\n";
                 break;
         }
-    } while (choice != 7);
+    } while (choice != 0);
 }
