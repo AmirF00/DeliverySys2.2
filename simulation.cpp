@@ -155,7 +155,7 @@ void simulation() {
                         //std::cout << "Van: " << loadedVan->getTop()->data->id.packetNumber << "\n";
 
                         // Display the first packet in the stack of each loaded van
-                        std::cout << "First packet in the van's stack:" << loadedVan->getAcronym() << "\n"; 
+                        std::cout << "First packet in the van's stack: " << loadedVan->getAcronym() << "\n"; 
                         Van::Node* vanTop = loadedVan->getTop();
                         while (vanTop) {
                             std::cout << "Packet Number: " << vanTop->data->id.packetNumber << "\n" << "Packet ID: " << vanTop->data->id.packetNumber << "-"
@@ -173,8 +173,74 @@ void simulation() {
                 }
 
             case 2:
-                // Implement loading a packet into a van
-                break;
+                {
+                    // Create hubs
+                    Hubs hubs;
+
+                    // Add postal codes and acronyms to hubs
+                    hubs.addPC(37115, "ADT");
+                    hubs.addPC(37427, "PER");
+                    hubs.addPC(37449, "ROD");
+                    hubs.addPC(37893, "VDT");
+                    hubs.addPC(37797, "CDV");
+                    hubs.addPC(37796, "MOZ");
+                    hubs.addPC(37129, "CDB");
+                    hubs.addPC(37340, "ALD");
+                    hubs.addPC(37002, "SAL");
+                    Hubs::Node* root = hubs.getRoot();
+                    // Iterate through all packets until all vans have at least one packet
+                    Packets::Node* currentPacket = CentralStation.peekFront();
+                    
+                    int parcelADT =0;
+                    int parcelPER =0;
+                    int parcelROD =0;
+                    int parcelVDT =0;
+                    int parcelCDV =0;
+                    int parcelMOZ =0;
+                    int parcelCDB =0;
+                    int parcelALD =0;
+                    int parcelSAL =0;
+                    int counter = 0;
+                   
+                    
+                    while (currentPacket) {
+                        
+                        int packetPostalCode = std::stoi(currentPacket->id.townCodes);
+                        Hubs::PC* hub = hubs.searchPCPostOrder(root, packetPostalCode);
+                        if (hub) {
+                            switch (packetPostalCode) {
+                                case 37115: parcelADT += 1; break;
+                                case 37427: parcelPER += 1; break;
+                                case 37449: parcelROD += 1; break;
+                                case 37893: parcelVDT += 1; break;
+                                case 37797: parcelCDV += 1; break;
+                                case 37796: parcelMOZ += 1; break;
+                                case 37129: parcelCDB += 1; break;
+                                case 37340: parcelALD += 1; break;
+                                case 37002: parcelSAL += 1; break;
+                            }
+                        }
+                        counter += 1;
+                        // Move to the next packet
+                        currentPacket = currentPacket->next;
+
+                    
+                    }
+                    
+                    std::cout << "Number of packets Per PCs:  " << std::endl;
+                    std::cout << "Absolute Frequency  Per PCs:  " << std::endl;
+                    std::cout << "Number of parcels for ADT " << parcelADT << std::endl;
+                    std::cout << "Number of parcels for PER " << parcelPER << std::endl;
+                    std::cout << "Number of parcels for ROD " << parcelROD << std::endl;
+                    std::cout << "Number of parcels for VDT " << parcelVDT << std::endl;
+                    std::cout << "Number of parcels for CDV " << parcelCDV << std::endl;
+                    std::cout << "Number of parcels for MOZ " << parcelMOZ << std::endl;
+                    std::cout << "Number of parcels for CDB " << parcelCDB << std::endl;
+                    std::cout << "Number of parcels for ALD " << parcelALD << std::endl;
+                    std::cout << "Number of parcels for SAL " << parcelSAL << std::endl;
+                    
+                    break;
+                }
             case 3:
                 // Implement unloading packets from a van
                 break;

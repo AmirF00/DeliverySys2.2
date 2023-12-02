@@ -12,16 +12,18 @@ public:
         std::string acronym;
         // ... (other fields)
     };
-
-private:
     struct Node {
         PC data;
         Node* left;
         Node* right;
         int height;
     };
-
     Node* root;
+
+private:
+    
+
+    
 
 public:
     Hubs();
@@ -29,7 +31,10 @@ public:
 
     void addPC(int postalCode, const std::string& acronym);
     PC* searchPC(int postalCode);
+    PC* searchPCPostOrder(Node* root, int postalCode);
     void displayPCs();
+    // Function to get the root of the AVL tree
+    Node* getRoot() const;
 
 private:
     // AVL tree functions

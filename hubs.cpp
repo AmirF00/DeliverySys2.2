@@ -29,6 +29,33 @@ Hubs::PC* Hubs::searchPC(int postalCode) {
     return nullptr;
 }
 
+
+
+Hubs::PC* Hubs::searchPCPostOrder(Node* root, int postalCode) {
+    if (root == nullptr) {
+        return nullptr;
+    }
+
+    // Search in the left subtree
+    Hubs::PC* leftResult = searchPCPostOrder(root->left, postalCode);
+    if (leftResult != nullptr) {
+        return leftResult;
+    }
+
+    // Search in the right subtree
+    Hubs::PC* rightResult = searchPCPostOrder(root->right, postalCode);
+    if (rightResult != nullptr) {
+        return rightResult;
+    }
+
+    // Check the current node
+    if (postalCode == root->data.postalCode) {
+        return &root->data;
+    }
+
+    return nullptr;
+}
+
 void Hubs::displayPCs() {
     displayPCs(root);
 }
@@ -222,6 +249,9 @@ void Hubs::cleanupTree(Node* root) {
     }
 }
 
+Hubs::Node* Hubs::getRoot() const {
+    return root;
+}
 
 
 
