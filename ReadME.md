@@ -13,3 +13,9 @@
 
 ## In progress 
 	1. part 4 options
+
+
+## Problems Faced 
+- Creating a random using computer so used times as seed
+- creating the data structures 
+- etc 
