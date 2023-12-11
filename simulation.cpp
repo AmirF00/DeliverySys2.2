@@ -7,7 +7,22 @@
 
 void simulation() {
     Packets CentralStation;
+    Packets CentralStationCopy;
+    Packets CentralStationCopyFinal;
     Packets VIPStation;
+    Packets usedProcessed;
+    Packets::Node* nextNode = nullptr;  // Initialize nextNode
+    
+    Packets DestinationADT;
+    Packets DestinationPER;
+    Packets DestinationROD;
+    Packets DestinationVDT;
+    Packets DestinationCDV;
+    Packets DestinationMOZ;
+    Packets DestinationCDB;
+    Packets DestinationALD;
+    Packets DestinationSAL;
+    
     // Create hubs
     Hubs hubsVIP;
     Van vanVIPADT1("VIPADT1");
@@ -16,10 +31,12 @@ void simulation() {
     Van vanVIPVDT1("VIPVDT1");
     Van vanVIPCDV1("VIPCDV1");
     Van vanVIPMOZ1("VIPMOZ1");
-    Van vanVIPCDB1("VIPCBD1");
+    Van vanVIPCDB1("VIPCDB1");
     Van vanVIPALD1("VIPALD1");
     Van vanVIPSAL1("VIPSAL1");
     
+    // Keep track of loaded vans
+    std::set<Van*> loadedGlobalVans;
     
      // Create hubs
     Hubs hubsGlobal;
@@ -41,11 +58,11 @@ void simulation() {
     Van vanGlobalVDT1("GlobalVDT1");
     Van vanGlobalCDV1("GlobalCDV1");
     Van vanGlobalMOZ1("GlobalMOZ1");
-    Van vanGlobalCDB1("GlobalCBD1");
+    Van vanGlobalCDB1("GlobalCDB1");
     Van vanGlobalALD1("GlobalALD1");
     Van vanGlobalSAL1("GlobalSAL1");
     
-    
+    int total = 4700;
 
     // Generate x number of packets
     int x;
@@ -54,7 +71,18 @@ void simulation() {
 
     for (int i = 0; i < x; ++i) {
         CentralStation.addPacket();
+        CentralStation.displayPacketByNumber(i);
+        
     }
+    
+    for (int i=0; i<x;i++){
+        CentralStation.copyPacket(i, CentralStationCopy);
+        CentralStationCopyFinal.addingPackets(CentralStationCopy);
+        std::cout << "\nDISPALY COPIED PACKET\n";
+        CentralStationCopyFinal.displayPacketByNumber(i);
+        }
+    
+    
 
     int choice;
     do {
@@ -67,7 +95,7 @@ void simulation() {
         std::cout << "5. Transport (move) a manually selected (existing) packet from the SPCS to a given PC\n";
         std::cout << "6. Transport (move) a manually selected (existing) packet from a given PC to another given PC.\n";
         std::cout << "7. Carry on with the packet’s delivery\n";
-        std::cout << "8. Carry on with the packet’s delivery FAST\n";
+        std::cout << "8. FULL Delivery Result FAST\n";
         std::cout << "0. Exit\n";
         std::cout << "Enter your choice (1-7): ";
         
@@ -106,7 +134,7 @@ void simulation() {
                     Van vanVDT1("VDT1");
                     Van vanCDV1("CDV1");
                     Van vanMOZ1("MOZ1");
-                    Van vanCDB1("CBD1");
+                    Van vanCDB1("CDB1");
                     Van vanALD1("ALD1");
                     Van vanSAL1("SAL1");
 
@@ -245,7 +273,7 @@ void simulation() {
                     int parcelCDB =0;
                     int parcelALD =0;
                     int parcelSAL =0;
-                    int counter = 0;
+                    //int counter = 0;
                    
                     
                     while (currentPacket) {
@@ -265,7 +293,7 @@ void simulation() {
                                 case 37002: parcelSAL += 1; break;
                             }
                         }
-                        counter += 1;
+                        //counter += 1;
                         // Move to the next packet
                         currentPacket = currentPacket->next;
 
@@ -386,6 +414,7 @@ void simulation() {
                         }
 
                         // Move to the next packet
+                        
                         currentPacket = currentPacket->next;
                     }
                     break;
@@ -722,14 +751,326 @@ void simulation() {
                     break;
                 }
             case 7:
-                // implement
-                break;
+                {
+                    int numPacketsGlobalADT1 = vanGlobalADT1.getNumPackets();
+                    int numPacketsGlobalPER1 = vanGlobalPER1.getNumPackets();
+                    int numPacketsGlobalROD1 = vanGlobalROD1.getNumPackets();
+                    int numPacketsGlobalVDT1 = vanGlobalVDT1.getNumPackets();
+                    int numPacketsGlobalCDV1 = vanGlobalCDV1.getNumPackets();
+                    int numPacketsGlobalMOZ1 = vanGlobalMOZ1.getNumPackets();
+                    int numPacketsGlobalCDB1 = vanGlobalCDB1.getNumPackets();
+                    int numPacketsGlobalALD1 = vanGlobalALD1.getNumPackets();
+                    int numPacketsGlobalSAL1 = vanGlobalSAL1.getNumPackets();
+                    std::cout << "Number of packets in the van: " << numPacketsGlobalADT1 << std::endl;
+                    std::cout << "Number of packets in the van: " << numPacketsGlobalPER1 << std::endl;
+                    std::cout << "Number of packets in the van: " << numPacketsGlobalROD1 << std::endl;
+                    std::cout << "Number of packets in the van: " << numPacketsGlobalVDT1 << std::endl;
+                    std::cout << "Number of packets in the van: " << numPacketsGlobalCDV1 << std::endl;
+                    std::cout << "Number of packets in the van: " << numPacketsGlobalMOZ1 << std::endl;
+                    std::cout << "Number of packets in the van: " << numPacketsGlobalCDB1 << std::endl;
+                    std::cout << "Number of packets in the van: " << numPacketsGlobalALD1 << std::endl;
+                    std::cout << "Number of packets in the van: " << numPacketsGlobalSAL1 << std::endl;
+                    // Iterate through all packets until all vans have at least one packet
+                    static Packets::Node* currentPacket = CentralStation.peekFront();
+                    
+                    int packetsToProcess = 197;
+                    //int iterate = 0;
+                    
+                    
+                    
+                    while (currentPacket && packetsToProcess>0) {  // Removed the condition !loadedVans.empty()
+                        //iterate++;
+                        nextNode = currentPacket->next; // Save nextNode before moving to the next packet
+                        int packetPostalCode = std::stoi(currentPacket->id.townCodes);
+                        //int packetNum = currentPacket->id.packetNumber;
+                        Hubs::PC* hub = hubsGlobal.searchPC(packetPostalCode);
+                        
+                        
+
+                        if (hub) {
+                            // Find the corresponding van
+                            Van* correspondingVan = nullptr;
+                            
+                            
+                            switch (packetPostalCode) {
+                                case 37115: correspondingVan = &vanGlobalADT1; break; 
+                                case 37427: correspondingVan = &vanGlobalPER1; break; 
+                                case 37449: correspondingVan = &vanGlobalROD1; break; 
+                                case 37893: correspondingVan = &vanGlobalVDT1; break; 
+                                case 37797: correspondingVan = &vanGlobalCDV1; break; 
+                                case 37796: correspondingVan = &vanGlobalMOZ1; break;  
+                                case 37129: correspondingVan = &vanGlobalCDB1; break; 
+                                case 37340: correspondingVan = &vanGlobalALD1; break; 
+                                case 37002: correspondingVan = &vanGlobalSAL1; break;
+                            }
+
+                             // Load the packet into the corresponding van
+                            if (correspondingVan) {
+                                correspondingVan->loadPacket(currentPacket);
+                                loadedGlobalVans.insert(correspondingVan);
+                                std::cout << "Packet loaded into the corresponding van: " << correspondingVan->getAcronym() << "\n";
+                                // Update the number of packets for each van after loading a packet
+                                numPacketsGlobalADT1 = vanGlobalADT1.getNumPackets();
+                                numPacketsGlobalPER1 = vanGlobalPER1.getNumPackets();
+                                numPacketsGlobalROD1 = vanGlobalROD1.getNumPackets();
+                                numPacketsGlobalVDT1 = vanGlobalVDT1.getNumPackets();
+                                numPacketsGlobalCDV1 = vanGlobalCDV1.getNumPackets();
+                                numPacketsGlobalMOZ1 = vanGlobalMOZ1.getNumPackets();
+                                numPacketsGlobalCDB1 = vanGlobalCDB1.getNumPackets();
+                                numPacketsGlobalALD1 = vanGlobalALD1.getNumPackets();
+                                numPacketsGlobalSAL1 = vanGlobalSAL1.getNumPackets();
+
+                                
+                               // Remove the current packet from CentralStation
+                                //CentralStation.deletePacketAtPosition(1); 
+
+                            }
+                        }
+                        
+                        //CentralStation.movePacketToVIPList(packetNum, usedProcessed);
+                        // Move to the next packet
+                         currentPacket = nextNode;  // Use nextNode to move to the next packet
+                         
+                        --packetsToProcess;
+                        
+                    }
+                    
+                    // Check if nextNode is not nullptr before accessing its members
+                    if (nextNode) {
+                        total = total - (nextNode->id.packetNumber);
+                        std::cout << "NUMBER OF PACKETS IN THE CENTRAL STATION: " << total << std::endl;
+                    } else {
+                        std::cout << "No more packets to process.\n";
+                    }
+                    std::cout << "---------------------------------------------------------------------------------------\n";
+                    // Display the number of packets for each van
+                                std::cout << "Number of packets in the van ADT1: " << numPacketsGlobalADT1 << std::endl;
+                                std::cout << "Number of packets in the van PER1: " << numPacketsGlobalPER1 << std::endl;
+                                std::cout << "Number of packets in the van ROD1: " << numPacketsGlobalROD1 << std::endl;
+                                std::cout << "Number of packets in the van VDT1: " << numPacketsGlobalVDT1 << std::endl;
+                                std::cout << "Number of packets in the van CDV1: " << numPacketsGlobalCDV1 << std::endl;
+                                std::cout << "Number of packets in the van MOZ1: " << numPacketsGlobalMOZ1 << std::endl;
+                                std::cout << "Number of packets in the van CDB1: " << numPacketsGlobalCDB1 << std::endl;
+                                std::cout << "Number of packets in the van ALD1: " << numPacketsGlobalALD1 << std::endl;
+                                std::cout << "Number of packets in the van SAL1: " << numPacketsGlobalSAL1 << std::endl;
+                    std::cout << "---------------------------------------------------------------------------------------\n";
+                     // Display the first packet of each loaded van
+                    std::cout << "All packets in each loaded van:\n";
+                    for (Van* loadedVan : loadedGlobalVans) {
+                        //std::cout << "Van: " << loadedVan->getTop()->data->id.packetNumber << "\n";
+
+                        // Display the first packet in the stack of each loaded van
+                        std::cout << "All the packets in the van's stack: " << loadedVan->getAcronym() << "\n"; 
+                        Van::Node* vanTop = loadedVan->getTop();
+                        while (vanTop) {
+                            std::cout << "Packet Number: " << vanTop->data->id.packetNumber << "\n" 
+                                    << "Packet ID: " << vanTop->data->id.packetNumber << "-" 
+                                    << vanTop->data->id.randomDigits << vanTop->data->id.randomLetter << "-" 
+                                    << vanTop->data->id.classificationDate << "-" << vanTop->data->id.townCodes << "\n" 
+                                    << "Longitude: " << vanTop->data->longitude.degrees << "º " << vanTop->data->longitude.minutes << "' " 
+                                    << vanTop->data->longitude.seconds << "\"\n" 
+                                    << "Latitude: " << vanTop->data->latitude.degrees << "º " << vanTop->data->latitude.minutes << "' " 
+                                    << vanTop->data->latitude.seconds << "\"\n"
+                                    << "Client ID: " << vanTop->data->clientID << "\n\n";
+                            vanTop = vanTop->next; 
+                        }
+                        
+                        std::cout << "---------------------------------------------------------------------------------------\n";
+                    }
+                    
+                    
+                    for (Van* loadedVan : loadedGlobalVans) {
+                        if (loadedVan->isFullyLoaded()) {
+                            if (loadedVan->getAcronym() == "GlobalADT1" ){
+                                std::cout << "Delivery to ADT\n";
+                                std::cout << "---------------------------------------------------------------------------------------\n";
+                                loadedVan->deliver(DestinationADT);
+                                } else if (loadedVan->getAcronym() == "GlobalPER1") {
+                                    std::cout << "Delivery to PER\n";
+                                    std::cout << "---------------------------------------------------------------------------------------\n";
+                                    loadedVan->deliver(DestinationPER);
+                                    } else if (loadedVan->getAcronym() == "GlobalROD1") {
+                                        std::cout << "Delivery to ROD\n";
+                                        std::cout << "---------------------------------------------------------------------------------------\n";
+                                        loadedVan->deliver(DestinationROD);
+                                        } else if (loadedVan->getAcronym() == "GlobalVDT1") {
+                                            std::cout << "Delivery to VDT\n";
+                                            std::cout << "---------------------------------------------------------------------------------------\n";
+                                            loadedVan->deliver(DestinationVDT);
+                                            } else if  (loadedVan->getAcronym() == "GlobalCDV1") {
+                                                std::cout << "Delivery to CDV\n";
+                                                std::cout << "---------------------------------------------------------------------------------------\n";
+                                                loadedVan->deliver(DestinationCDV);
+                                                } else if (loadedVan->getAcronym() == "GlobalMOZ1") {
+                                                    std::cout << "Delivery to MOZ\n";
+                                                    std::cout << "---------------------------------------------------------------------------------------\n";
+                                                    loadedVan->deliver(DestinationMOZ);
+                                                    } else if (loadedVan->getAcronym() == "GlobalCDB1") {
+                                                        std::cout << "Delivery to CDB\n";
+                                                        std::cout << "---------------------------------------------------------------------------------------\n";
+                                                         loadedVan->deliver(DestinationCDB);
+                                                        } else if (loadedVan->getAcronym() == "GlobalALD1") {
+                                                            std::cout << "Delivery to ALD\n";
+                                                            std::cout << "---------------------------------------------------------------------------------------\n";
+                                                             loadedVan->deliver(DestinationALD);
+                                                            } else if (loadedVan->getAcronym() == "GlobalSAL1") {
+                                                                std::cout << "Delivery to SAL\n";
+                                                                std::cout << "---------------------------------------------------------------------------------------\n";
+                                                                loadedVan->deliver(DestinationSAL);
+                                                                } else {
+                                                                    std::cout << "NO van Was ready to leave \n";
+                                                                    }
+                                                
+                            }
+                        
+                        }
+                        
+                        
+                        
+                        
+
+                    
+
+
+                        
+                       
+                        
+                        
+
+
+                    
+                    break;
+                    }
+                
             case 8:
                 // implement
-                break;
+                {
+                    std::cout << "TIHS IS THE SECOND LOOP  \n";
+                        std::cout << "Packets in the Copy Station  "  << std::endl;
+                        //CentralStationCopyFinal.displayPackets();
+                        Packets::Node* currentPacketFinal = CentralStationCopyFinal.peekFront();
+                        
+                        int count = 0;
+                        
+                       // ...
+                        while (currentPacketFinal) {
+                            // Get the next node before modifying the list
+                            Packets::Node* nextNode = currentPacketFinal->next;
+                            
+                            //std::cout << "Displaying packet " << currentPacketFinal->id.packetNumber << " in CentralStationCopyFinal:\n";
+                            //std::cout << "---------------------------------------------------------------------------------------\n";
+                            // Display additional packet information as needed
+                            //std::cout << "Town Codes: " << currentPacketFinal->id.townCodes << "\n";
+                            //std::cout << "Longitude: " << currentPacketFinal->longitude << "\n";
+                            //std::cout << "Latitude: " << currentPacketFinal->latitude << "\n";
+                            //std::cout << "Client ID: " << currentPacketFinal->clientID << "\n";
+                            //std::cout << "---------------------------------------------------------------------------------------\n";
+                            // Get the town code
+                            int packetPostalCode = std::stoi(currentPacketFinal->id.townCodes);
+    
+                            // Move the packet to VIP based on town code
+                            switch (packetPostalCode) {
+                                case 37115: CentralStationCopyFinal.movePacketToVIPList(currentPacketFinal->id.packetNumber, DestinationADT); break;
+                                case 37427: CentralStationCopyFinal.movePacketToVIPList(currentPacketFinal->id.packetNumber, DestinationPER); break;
+                                case 37449: CentralStationCopyFinal.movePacketToVIPList(currentPacketFinal->id.packetNumber, DestinationROD); break;
+                                case 37893: CentralStationCopyFinal.movePacketToVIPList(currentPacketFinal->id.packetNumber, DestinationVDT); break;
+                                case 37797: CentralStationCopyFinal.movePacketToVIPList(currentPacketFinal->id.packetNumber, DestinationCDV); break;
+                                case 37796: CentralStationCopyFinal.movePacketToVIPList(currentPacketFinal->id.packetNumber, DestinationMOZ); break;
+                                case 37129: CentralStationCopyFinal.movePacketToVIPList(currentPacketFinal->id.packetNumber, DestinationCDB); break;
+                                case 37340: CentralStationCopyFinal.movePacketToVIPList(currentPacketFinal->id.packetNumber, DestinationALD); break;
+                                case 37002: CentralStationCopyFinal.movePacketToVIPList(currentPacketFinal->id.packetNumber, DestinationSAL); break;
+                                // Add other cases as needed for different town codes and corresponding destinations
+                                // case xxx: CentralStationCopyFinal.movePacketToVIPList(currentPacketFinal->id.packetNumber, DestinationXXX); break;
+                                default:
+                                    std::cout << "No VIP destination found for town code: " << packetPostalCode << "\n";
+                        }
+                        count++;
+    
+                        
+                             
+                        
+    
+                        std::cout << "The LOOP COUNT: "<< count << std::endl;
+                        // Move to the next packet
+                        currentPacketFinal = nextNode;
+                        
+                        // decrease counter 
+                        //--packetsToProcess2;
+                    }
+                    
+                    std::cout << "---------------------------------------------------------------------------------------\n";
+                        std::cout << "Packets in ADT\n";
+                        std::cout << "Numbers of packets in ADT: " << DestinationADT.getPacketCount() << std::endl;
+                        
+                            DestinationADT.displayPackets();
+                             
+                        
+                        std::cout << "---------------------------------------------------------------------------------------\n";
+                        std::cout << "Packets in PER\n";
+                        std::cout << "Numbers of packets in PER: " << DestinationPER.getPacketCount() << std::endl;
+                        
+                            DestinationPER.displayPackets();
+                             
+                        std::cout << "---------------------------------------------------------------------------------------\n";
+                        std::cout << "Packets in ROD\n";
+                        std::cout << "Numbers of packets in ROD: " << DestinationROD.getPacketCount() << std::endl;
+                       
+                            DestinationROD.displayPackets();
+                            
+                        
+                        std::cout << "---------------------------------------------------------------------------------------\n";
+                        std::cout << "Packets in VDT\n";
+                        std::cout << "Numbers of packets in VDT: " << DestinationVDT.getPacketCount() << std::endl;
+                        
+                            DestinationVDT.displayPackets();
+                             
+                        
+                        std::cout << "---------------------------------------------------------------------------------------\n";
+                        std::cout << "Packets in CDV\n";
+                        std::cout << "Numbers of packets in CDV: " << DestinationCDV.getPacketCount() << std::endl;
+                        
+                            DestinationCDV.displayPackets();
+                            
+                        
+                        std::cout << "---------------------------------------------------------------------------------------\n";
+                        std::cout << "Packets in MOZ\n";
+                        std::cout << "Numbers of packets in MOZ: " << DestinationMOZ.getPacketCount() << std::endl;
+                        
+                            DestinationMOZ.displayPackets();
+                             
+                        
+                        std::cout << "---------------------------------------------------------------------------------------\n";
+                        std::cout << "Packets in CDB\n";
+                        std::cout << "Numbers of packets in CDB: " << DestinationCDB.getPacketCount() << std::endl;
+                       
+                            DestinationCDB.displayPackets();
+                             
+                        
+                        std::cout << "---------------------------------------------------------------------------------------\n";
+                        std::cout << "Packets in ALD\n";
+                        std::cout << "Numbers of packets in ALD: " << DestinationALD.getPacketCount() << std::endl;
+                       
+                            DestinationALD.displayPackets();
+                            
+                        
+                        
+                        std::cout << "---------------------------------------------------------------------------------------\n";
+                        std::cout << "Packets in SAL\n";
+                        std::cout << "Numbers of packets in SAL: " << DestinationSAL.getPacketCount() << std::endl;
+                       
+                            DestinationSAL.displayPackets();
+                    std::cout << "Finished processing packets in CentralStationCopyFinal.\n";
+                    break;
+                    }
+                
+                
+                
+                
             default:
                 std::cout << "Invalid choice. Please enter a number between 1 and 7.\n";
                 break;
         }
     } while (choice != 0);
+    
+
 }

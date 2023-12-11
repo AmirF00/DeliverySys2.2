@@ -6,12 +6,29 @@ Packets::Packets() : head(nullptr), tail(nullptr), packetCount(0) {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 }
 
-// Destructor
+/*
+ * 
+ * // Destructor
 Packets::~Packets() {
     Node* current = head;
     Node* next;
     while (current != nullptr) {
         next = current->next;
+        delete current;
+        current = next;
+    }
+}
+ * 
+ * 
+ * */
+
+Packets::~Packets() {
+    // Implement the destructor if needed
+    // Make sure to delete allocated memory for packets
+    Node* current = head;
+    while (current) {
+        Node* next = current->next;
+        delete current->next; // Assuming Packet has dynamic memory that needs to be freed
         delete current;
         current = next;
     }
@@ -78,6 +95,27 @@ void Packets::displayPackets() {
         current = current->next;
     }
 }
+
+// Function to check if the number of packets is divisible by 87 and display all packets
+void Packets::displayPacketsIfDivisibleBy87() {
+    int packetCount = 0;
+    Node* current = head;
+
+    // Count the number of packets
+    while (current != nullptr) {
+        packetCount++;
+        current = current->next;
+    }
+
+    // Check if the number of packets is divisible by 87
+    if (packetCount % 87 == 0) {
+        std::cout << "Number of packets is divisible by 87. Displaying all packets:\n";
+        displayPackets();  // Use the existing displayPackets function
+    } else {
+        std::cout << "Number of packets is not divisible by 87.\n";
+    }
+}
+
 
 // Function to display all packets in reverse order
 void Packets::displayReversePackets() {
@@ -291,6 +329,9 @@ void Packets::movePacketToVIPList(int packetNumber, Packets& packetVIP) {
             // Exit the loop once the packet is found and processed
             break;
         }
+        
+        // Add this line at various points to trace the flow
+        std::cout << "Debug: MOVING packet " << current->id.packetNumber << std::endl;
 
         current = current->next;
     }
@@ -320,4 +361,121 @@ void Packets::displayPacketByNumber(int packetNumber) {
 
     // If the packet with the given number is not found
     std::cout << "Packet with number " << packetNumber << " not found.\n";
+}
+
+// Inside packets.cpp, add the following function definition
+void Packets::addNode(Node* newNode) {
+    // Increment packet number
+    ++packetCount;
+
+    // Update links
+    newNode->prev = tail;
+    newNode->next = nullptr;
+
+    if (tail != nullptr) {
+        tail->next = newNode;
+    } else {
+        // The list is empty, set the head
+        head = newNode;
+    }
+
+    // Update tail
+    tail = newNode;
+}
+
+void Packets::addPackets(const Node& packet) {
+    Node* newNode = new Node;
+
+    newNode->id = packet.id;
+    newNode->longitude = packet.longitude;
+    newNode->latitude = packet.latitude;
+    newNode->clientID = packet.clientID;
+
+    newNode->prev = tail;
+    newNode->next = nullptr;
+
+    if (tail != nullptr) {
+        tail->next = newNode;
+    } else {
+        head = newNode;
+    }
+
+    tail = newNode;
+}
+
+void Packets::addingPackets(const Packets& sourcePackets) {
+    Node* currentPacket = sourcePackets.head;
+
+    while (currentPacket != nullptr) {
+        Node* newNode = new Node;
+
+        newNode->id = currentPacket->id;
+        newNode->longitude = currentPacket->longitude;
+        newNode->latitude = currentPacket->latitude;
+        newNode->clientID = currentPacket->clientID;
+
+        newNode->prev = tail;
+        newNode->next = nullptr;
+
+        if (tail != nullptr) {
+            tail->next = newNode;
+        } else {
+            head = newNode;
+        }
+
+        tail = newNode;
+        currentPacket = currentPacket->next;
+    }
+}
+
+
+void Packets::copyPacket(int packetNumber, Packets& tmppacket) {
+    // Search for the packet with the specified packet number
+    Node* currentPacket = peekFront();
+    while (currentPacket) {
+        if (currentPacket->id.packetNumber == packetNumber) {
+            // Create a new node for tmppacket if it's empty
+            if (tmppacket.head == nullptr) {
+                tmppacket.head = new Node;
+                tmppacket.tail = tmppacket.head;
+            }
+
+            // Assuming Packets has the required members
+            tmppacket.tail->id = currentPacket->id;
+            tmppacket.tail->longitude = currentPacket->longitude;
+            tmppacket.tail->latitude = currentPacket->latitude;
+            tmppacket.tail->clientID = currentPacket->clientID;
+
+            // Insert additional members if any
+
+            std::cout << "Packet copied successfully.\n";
+            return; // Exit the function once the packet is found and copied
+        }
+        currentPacket = currentPacket->next;
+    }
+
+    // If the packet with the specified number is not found
+    std::cout << "Packet with number " << packetNumber << " not found.\n";
+}
+
+
+// Inside the implementation of the `Packets` class in "packets.cpp"
+void Packets::copyingPacket(const Node* sourcePacket, Node*& destinationPacket) {
+    if (sourcePacket == nullptr) {
+        std::cerr << "Error: Source packet is nullptr.\n";
+        return;
+    }
+
+    if (destinationPacket == nullptr) {
+        std::cerr << "Error: Destination packet is nullptr.\n";
+        return;
+    }
+
+    // Copy data from the source packet to the destination packet
+    destinationPacket->id = sourcePacket->id;
+    destinationPacket->longitude = sourcePacket->longitude;
+    destinationPacket->latitude = sourcePacket->latitude;
+    destinationPacket->clientID = sourcePacket->clientID;
+    
+    // You may need to adjust this part based on the structure of your PacketID and GPSCoordinates structs
 }

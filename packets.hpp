@@ -6,6 +6,7 @@
 #include <ctime>
 #include <cstdlib>
 
+
 struct PacketID {
     int packetNumber;
     std::string randomDigits;
@@ -30,6 +31,15 @@ public:
         Node* prev;
         Node* next;
     };
+    
+    struct Packet {
+    PacketID id;
+    GPSCoordinates longitude;
+    GPSCoordinates latitude;
+    std::string clientID;
+    };
+    
+    
 private:
     Node* head;
     Node* tail;
@@ -47,9 +57,14 @@ public:
 
     // Function to display all packets in the list
     void displayPackets();
+    
+    void displayPacketsIfDivisibleBy87();
 
     // Function to display all packets in reverse order
     void displayReversePackets();
+    
+    // Function to copy the contents of one packet into another
+    void copyingPacket(const Node* sourcePacket, Node*& destinationPacket);
 
     // Function to insert a packet at a specific position
     void insertPacketAtPosition(int position);
@@ -65,6 +80,13 @@ public:
 
     // Function to peek at the end packet
     Node* peekEnd();
+    
+    void addNode(Node* newNode);
+    
+    void addPackets(const Node& packets);
+     void addingPackets(const Packets& sourcePackets);
+    
+    void copyPacket(int packetNumber, Packets& tmppacket);
 
     // Getter functions
     int getPacketCount() const;

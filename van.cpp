@@ -25,6 +25,7 @@ void Van::loadPacket(Packets::Node* packet) {
     std::cout << "Packet " << packet->id.packetNumber << " loaded into the van." << std::endl;
 }
 
+
 void Van::unloadPackets() {
     while (top) {
         Node* temp = top;
@@ -204,5 +205,33 @@ void Van::unloadPacket(int packetNumber) {
 
     // If the function reaches here, the packet was not found in the van
     std::cout << "Packet with number " << packetNumber << " not found in " << getAcronym() << "\n";
+}
+
+// In van.cpp
+void Van::deliver(Packets& destination) {
+    // Iterate through all packets in the current van
+    Node* current = top;
+    Node* prev = nullptr;  // Keep track of the previous node for unlinking
+
+    while (current) {
+        // Unlink the current node from the current van
+        if (prev) {
+            prev->next = current->next;
+        } else {
+            top = current->next;
+        }
+
+        // Add the packet to the destination van
+        //destination.addNode(convertVanNodeToPacketsNode(current));
+
+        std::cout << "Packet with number " << current->data->id.packetNumber 
+                  << " delivered"  << "\n";
+
+        // Delete the node, but not the packet itself
+        delete current;
+
+        // Move to the next packet in the current van
+        current = top;
+    }
 }
 

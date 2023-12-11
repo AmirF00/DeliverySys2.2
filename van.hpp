@@ -19,7 +19,8 @@ public:
     std::string getAcronym() const;
     // Function to get the number of packets in the van
     int getNumPackets() const;
-    
+    // Function to deliver packets to a destination van
+    void deliver(Packets& destination);
     
 
 
