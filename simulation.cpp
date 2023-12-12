@@ -97,7 +97,7 @@ void simulation() {
         std::cout << "7. Carry on with the packet’s delivery\n";
         std::cout << "8. FULL Delivery Result FAST\n";
         std::cout << "0. Exit\n";
-        std::cout << "Enter your choice (1-7): ";
+        std::cout << "Enter your choice (0-8): ";
         
         // Handle non-integer input
         if (!(std::cin >> choice)) {
