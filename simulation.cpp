@@ -4,6 +4,10 @@
 #include "van.hpp"
 #include "packets.hpp"
 #include "hubs.hpp"
+#define PACKET_COUNT 4700
+#define PROCES_COUNT 197
+
+
 
 void simulation() {
     Packets CentralStation;
@@ -65,9 +69,9 @@ void simulation() {
     int total = 4700;
 
     // Generate x number of packets
-    int x;
-    std::cout << "Enter the number of packets to generate: ";
-    std::cin >> x;
+    int x = PACKET_COUNT;
+    //std::cout << "Enter the number of packets to generate: ";
+    //std::cin >> x;
 
     for (int i = 0; i < x; ++i) {
         CentralStation.addPacket();
