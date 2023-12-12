@@ -1,0 +1,165 @@
+// van.pseudocode
+
+// Constructor
+Van(acronym):
+    top = null
+    vipTop = null
+    acronym = acronym
+
+// Destructor
+Van::~Van():
+    unloadPackets()
+    unloadVIP()
+
+// Load a regular packet
+Van.loadPacket(packet):
+    if isFullyLoaded():
+        print "Van is fully loaded. Cannot load more packets."
+        return
+    newNode = new Node(packet, top)
+    top = newNode
+    print "Packet " + packet.packetNumber + " loaded into the van."
+
+// Unload regular packets
+Van.unloadPackets():
+    while top is not null:
+        temp = top
+        top = top.next
+        delete temp
+
+// Load a VIP packet
+Van.loadPacketVIP(packet):
+    if isVIPFullyLoaded():
+        print "VIP Van is fully loaded. Cannot load more VIP packets."
+        return
+    newNode = new Node(packet, vipTop)
+    vipTop = newNode
+    print "VIP Packet " + packet.packetNumber + " loaded into the VIP van."
+
+// Unload VIP packets
+Van.unloadVIP():
+    if vipTop is not null:
+        print "Unloading VIP packets: "
+        while vipTop is not null:
+            temp = vipTop
+            print temp.data.packetNumber + " "
+            vipTop = temp.next
+            delete temp
+        print ""
+
+// Check if the van is fully loaded with regular packets
+Van.isFullyLoaded():
+    return size() == MAX_CAPACITY
+
+// Check if the VIP van is fully loaded with VIP packets
+Van.isVIPFullyLoaded():
+    return VIPSize() == MAX_CAPACITY
+
+// Check if the van is empty
+Van.isEmpty():
+    return top == null
+
+// Check if the VIP van is empty
+Van.isVIPEmpty():
+    return vipTop == null
+
+// Getter and setter for top
+Van.getTop():
+    return top
+
+Van.setTop(newTop):
+    top = newTop
+
+// Getter and setter for vipTop
+Van.getVIPTop():
+    return vipTop
+
+Van.setVIPTop(newTop):
+    vipTop = newTop
+
+// Get the size of the stack
+Van.size():
+    count = 0
+    current = top
+    while current is not null:
+        count++
+        current = current.next
+    return count
+
+// Get the size of the VIP stack
+Van.VIPSize():
+    count = 0
+    current = vipTop
+    while current is not null:
+        count++
+        current = current.next
+    return count
+
+// Display all packets in the van
+Van.displayPackets():
+    current = top
+    while current is not null:
+        print "Packet ID: " + current.data.packetNumber
+        current = current.next
+
+// Implement the getAcronym function
+Van.getAcronym():
+    return acronym
+
+// Get the number of packets in the van
+Van.getNumPackets():
+    count = 0
+    current = top
+    while current is not null:
+        count++
+        current = current.next
+    return count
+
+// Move a packet from the current van to another van
+Van.movePacket(vanDestination, movedPacketNumber):
+    current = top
+    prev = null
+    while current is not null:
+        if current.data.packetNumber == movedPacketNumber:
+            if prev is not null:
+                prev.next = current.next
+            else:
+                top = current.next
+            vanDestination.loadPacket(current.data)
+            print "Packet with number " + movedPacketNumber + " moved from " + getAcronym() + " to " + vanDestination.getAcronym()
+            delete current
+            break
+        prev = current
+        current = current.next
+
+// Unload a packet with a specific packet number from the van
+Van.unloadPacket(packetNumber):
+    current = top
+    prev = null
+    while current is not null:
+        if current.data.packetNumber == packetNumber:
+            if prev is not null:
+                prev.next = current.next
+            else:
+                top = current.next
+            delete current
+            print "Packet with number " + packetNumber + " unloaded from " + getAcronym()
+            return
+        prev = current
+        current = current.next
+    print "Packet with number " + packetNumber + " not found in " + getAcronym()
+
+// Deliver all packets in the van to the specified destination
+Van.deliver(destination):
+    current = top
+    prev = null
+    while current is not null:
+        if prev is not null:
+            prev.next = current.next
+        else:
+            top = current.next
+        destination.addNode(convertVanNodeToPacketsNode(current))
+        print "Packet with number " + current.data.packetNumber + " delivered"
+        delete current
+        current = top
+

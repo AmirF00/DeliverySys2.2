@@ -1,0 +1,148 @@
+// packets.pseudocode
+
+// Constructor
+Packets():
+    head = null
+    tail = null
+    packetCount = 0
+
+// Destructor
+Packets::~Packets():
+    current = head
+    while current is not null:
+        next = current.next
+        delete current
+        current = next
+
+// Function to add a packet to the list
+Packets.addPacket():
+    newNode = new Node
+    increment packetCount
+    set newNode.id.packetNumber = packetCount
+    set other attributes of newNode
+    update links in the list
+
+// Function to display all packets in the list
+Packets.displayPackets():
+    current = head
+    while current is not null:
+        display packet information
+        current = current.next
+
+// Function to check if the number of packets is divisible by 87 and display all packets
+Packets.displayPacketsIfDivisibleBy87():
+    packetCount = count packets
+    if packetCount % 87 == 0:
+        display all packets
+    else:
+        print "Number of packets is not divisible by 87."
+
+// Function to display all packets in reverse order
+Packets.displayReversePackets():
+    current = tail
+    while current is not null:
+        display packet information
+        current = current.prev
+
+// Function to insert a packet at a specific position
+Packets.insertPacketAtPosition(position):
+    if invalid position:
+        print "Invalid position for insertion."
+        return
+    newNode = new Node
+    increment packetCount
+    set attributes of newNode
+    update links at specified position
+
+// Function to delete a packet at a specific position
+Packets.deletePacketAtPosition(position):
+    if invalid position:
+        print "Invalid position for deletion."
+        return
+    delete packet at specified position
+    decrement packetCount
+
+// Function to search for a packet by packet number
+Packets.searchPacketByNumber(packetNumber):
+    current = head
+    while current is not null:
+        if current.id.packetNumber == packetNumber:
+            return current
+        current = current.next
+    return null
+
+// Function to peek at the front packet
+Packets.peekFront():
+    return head
+
+// Function to peek at the end packet
+Packets.peekEnd():
+    return tail
+
+// Getter functions
+Packets.getPacketCount():
+    return packetCount
+
+Packets.getHead():
+    return head
+
+Packets.getTail():
+    return tail
+
+// Setter functions
+Packets.setHead(newHead):
+    head = newHead
+
+Packets.setTail(newTail):
+    tail = newTail
+
+Packets.setPacketCount(newPacketCount):
+    packetCount = newPacketCount
+
+// Helper function to generate a random date after 2020
+Packets.generateRandomDate():
+    generate random day, month, and year
+    return formatted date string
+
+// Helper function to select a town code at random
+Packets.getRandomTownCode():
+    townCodes = ["ADT", "PER", "ROD", "VDT", "CDV", "MOZ", "CDB", "ALD", "SAL"]
+    return random town code from townCodes
+
+// Function to move a packet to the VIP list
+Packets.movePacketToVIPList(packetNumber, packetVIP):
+    current = head
+    while current is not null:
+        if current.id.packetNumber == packetNumber:
+            create new packet in packetVIP
+            copy data from current packet to new VIP packet
+            delete current packet from the original list
+            return
+        current = current.next
+    print "Packet with number " + packetNumber + " not found."
+
+// Function to display a specific packet by packet number
+Packets.displayPacketByNumber(packetNumber):
+    current = head
+    while current is not null:
+        if current.id.packetNumber == packetNumber:
+            display packet information
+            return
+        current = current.next
+    print "Packet with number " + packetNumber + " not found."
+
+// Function to copy a packet to a temporary packet
+Packets.copyPacket(packetNumber, tmppacket):
+    currentPacket = peekFront()
+    while currentPacket is not null:
+        if currentPacket.id.packetNumber == packetNumber:
+            copy data from currentPacket to tmppacket
+            print "Packet copied successfully."
+            return
+        currentPacket = currentPacket.next
+    print "Packet with number " + packetNumber + " not found."
+
+// Helper function to copy packet data
+Packets.copyingPacket(sourcePacket, destinationPacket):
+    copy data from sourcePacket to destinationPacket
+
