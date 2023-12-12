@@ -316,6 +316,101 @@ void simulation() {
                     std::cout << "Number of parcels for ALD " << parcelALD << std::endl;
                     std::cout << "Number of parcels for SAL " << parcelSAL << std::endl;
                     
+                    std::cout << "Number of packets Per PCs:  " << std::endl;
+std::cout << "Relative Frequency  Per PCs:  " << std::endl;
+std::cout << "Number of parcels for ADT " << static_cast<double>(parcelADT) / 4700.0 << std::endl;
+std::cout << "Number of parcels for PER " << static_cast<double>(parcelPER) / 4700.0 << std::endl;
+std::cout << "Number of parcels for ROD " << static_cast<double>(parcelROD) / 4700.0 << std::endl;
+std::cout << "Number of parcels for VDT " << static_cast<double>(parcelVDT) / 4700.0 << std::endl;
+std::cout << "Number of parcels for CDV " << static_cast<double>(parcelCDV) / 4700.0 << std::endl;
+std::cout << "Number of parcels for MOZ " << static_cast<double>(parcelMOZ) / 4700.0 << std::endl;
+std::cout << "Number of parcels for CDB " << static_cast<double>(parcelCDB) / 4700.0 << std::endl;
+std::cout << "Number of parcels for ALD " << static_cast<double>(parcelALD) / 4700.0 << std::endl;
+std::cout << "Number of parcels for SAL " << static_cast<double>(parcelSAL) / 4700.0 << std::endl;
+
+                    
+                    
+                       // Initialize min and max with the first number
+int minValue = parcelADT;
+int maxValue = parcelADT;
+std::string minParcel = "ADT";  // Initialize with the first parcel
+std::string maxParcel = "ADT";
+
+// Compare with other numbers
+if (parcelPER < minValue) { 
+    minValue = parcelPER; 
+    minParcel = "PER";
+}
+if (parcelROD < minValue) { 
+    minValue = parcelROD; 
+    minParcel = "ROD";
+}
+if (parcelVDT < minValue) { 
+    minValue = parcelVDT; 
+    minParcel = "VDT";
+}
+if (parcelCDV < minValue) { 
+    minValue = parcelCDV; 
+    minParcel = "CDV";
+}
+if (parcelMOZ < minValue) { 
+    minValue = parcelMOZ; 
+    minParcel = "MOZ";
+}
+if (parcelCDB < minValue) { 
+    minValue = parcelCDB; 
+    minParcel = "CDB";
+}
+if (parcelALD < minValue) { 
+    minValue = parcelALD; 
+    minParcel = "ALD";
+}
+if (parcelSAL < minValue) { 
+    minValue = parcelSAL; 
+    minParcel = "SAL";
+}
+
+if (parcelPER > maxValue) { 
+    maxValue = parcelPER; 
+    maxParcel = "PER";
+}
+if (parcelROD > maxValue) { 
+    maxValue = parcelROD; 
+    maxParcel = "ROD";
+}
+if (parcelVDT > maxValue) { 
+    maxValue = parcelVDT; 
+    maxParcel = "VDT";
+}
+if (parcelCDV > maxValue) { 
+    maxValue = parcelCDV; 
+    maxParcel = "CDV";
+}
+if (parcelMOZ > maxValue) { 
+    maxValue = parcelMOZ; 
+    maxParcel = "MOZ";
+}
+if (parcelCDB > maxValue) { 
+    maxValue = parcelCDB; 
+    maxParcel = "CDB";
+}
+if (parcelALD > maxValue) { 
+    maxValue = parcelALD; 
+    maxParcel = "ALD";
+}
+if (parcelSAL > maxValue) { 
+    maxValue = parcelSAL; 
+    maxParcel = "SAL";
+}
+
+// Output the result
+std::cout << "Minimum value: " << minValue << " for parcel: " << minParcel << std::endl;
+std::cout << "Maximum value: " << maxValue << " for parcel: " << maxParcel << std::endl;
+
+                    
+                    
+                    
+                    
                     break;
                 }
             case 3:
