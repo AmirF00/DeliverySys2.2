@@ -841,6 +841,54 @@ void simulation() {
                         std::cout << "NUMBER OF PACKETS IN THE CENTRAL STATION: " << total << std::endl;
                     } else {
                         std::cout << "No more packets to process.\n";
+                        
+                        
+                        for (Van* loadedVan : loadedGlobalVans) {
+                        if (!loadedVan->isFullyLoaded()) {
+                            if (loadedVan->getAcronym() == "GlobalADT1" ){
+                                std::cout << "Delivery to ADT\n";
+                                std::cout << "---------------------------------------------------------------------------------------\n";
+                                loadedVan->deliver(DestinationADT);
+                                } else if (loadedVan->getAcronym() == "GlobalPER1") {
+                                    std::cout << "Delivery to PER\n";
+                                    std::cout << "---------------------------------------------------------------------------------------\n";
+                                    loadedVan->deliver(DestinationPER);
+                                    } else if (loadedVan->getAcronym() == "GlobalROD1") {
+                                        std::cout << "Delivery to ROD\n";
+                                        std::cout << "---------------------------------------------------------------------------------------\n";
+                                        loadedVan->deliver(DestinationROD);
+                                        } else if (loadedVan->getAcronym() == "GlobalVDT1") {
+                                            std::cout << "Delivery to VDT\n";
+                                            std::cout << "---------------------------------------------------------------------------------------\n";
+                                            loadedVan->deliver(DestinationVDT);
+                                            } else if  (loadedVan->getAcronym() == "GlobalCDV1") {
+                                                std::cout << "Delivery to CDV\n";
+                                                std::cout << "---------------------------------------------------------------------------------------\n";
+                                                loadedVan->deliver(DestinationCDV);
+                                                } else if (loadedVan->getAcronym() == "GlobalMOZ1") {
+                                                    std::cout << "Delivery to MOZ\n";
+                                                    std::cout << "---------------------------------------------------------------------------------------\n";
+                                                    loadedVan->deliver(DestinationMOZ);
+                                                    } else if (loadedVan->getAcronym() == "GlobalCDB1") {
+                                                        std::cout << "Delivery to CDB\n";
+                                                        std::cout << "---------------------------------------------------------------------------------------\n";
+                                                         loadedVan->deliver(DestinationCDB);
+                                                        } else if (loadedVan->getAcronym() == "GlobalALD1") {
+                                                            std::cout << "Delivery to ALD\n";
+                                                            std::cout << "---------------------------------------------------------------------------------------\n";
+                                                             loadedVan->deliver(DestinationALD);
+                                                            } else if (loadedVan->getAcronym() == "GlobalSAL1") {
+                                                                std::cout << "Delivery to SAL\n";
+                                                                std::cout << "---------------------------------------------------------------------------------------\n";
+                                                                loadedVan->deliver(DestinationSAL);
+                                                                } else {
+                                                                    std::cout << "NO van Was ready to leave \n";
+                                                                    }
+                                                
+                            }
+                        
+                        }
+                        
                     }
                     std::cout << "---------------------------------------------------------------------------------------\n";
                     // Display the number of packets for each van
